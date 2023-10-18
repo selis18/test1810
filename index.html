@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Форма на Vue.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input[type="submit"] {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <form @submit.prevent="saveData">
+            <label for="city">Город:</label>
+            <select id="city" v-model="selectedCity" @change="updateWorkshops">
+                <option value="Moscow">Москва</option>
+                <option value="StPetersburg">Санкт-Петербург</option>
+                <option value="Novosibirsk">Новосибирск</option>
+            </select>
+            <label for="workshop">Цех:</label>
+            <select id="workshop" v-model="selectedWorkshop" @change="updateEmployees">
+                <option v-for="workshop in workshops" :value="workshop">{{ workshop }}</option>
+            </select>
+            <label for="employee">Сотрудник:</label>
+            <select id="employee" v-model="selectedEmployee">
+                <option v-for="employee in employees" :value="employee">{{ employee }}</option>
+            </select>
+            <label for="team">Бригада:</label>
+            <select id="team" v-model="selectedTeam">
+                <option v-for="team in teams" :value="team">{{ team }}</option>
+            </select>
+            <label for="shift">Смена:</label>
+            <select id="shift" v-model="selectedShift">
+                <option value="first">Первая</option>
+                <option value="second">Вторая</option>
+            </select>
+            <input type="submit" value="Отправить">
+        </form>
+    </div>
+    
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                selectedCity: '',
+                selectedWorkshop: '',
+                selectedEmployee: '',
+                selectedTeam: '',
+                selectedShift: '',
+                workshops: [],
+                employees: [],
+                teams: ['Первая', 'Вторая']
+            },
+            methods: {
+                updateWorkshops() {
+                    this.selectedWorkshop = '';
+                    this.selectedEmployee = '';
+                    this.workshops = [];
+                    
+                    if (this.selectedCity === 'Moscow') {
+                        this.workshops = ['Workshop 1', 'Workshop 2', 'Workshop 3'];
+                    } else if (this.selectedCity === 'StPetersburg') {
+                        this.workshops = ['Workshop A', 'Workshop B', 'Workshop C'];
+                    } else if (this.selectedCity === 'Novosibirsk') {
+                        this.workshops = ['Workshop X', 'Workshop Y', 'Workshop Z'];
+                    }
+                },
+                updateEmployees() {
+                    this.selectedEmployee = '';
+                    this.employees = [];
+                    
+                    if (
+                        this.selectedWorkshop === 'Workshop 1' ||
+                        this.selectedWorkshop === 'Workshop A' ||
+                        this.selectedWorkshop === 'Workshop X'
+                    ) {
+                        this.employees = ['John', 'Mary', 'Alex'];
+                    } else if (
+                        this.selectedWorkshop === 'Workshop 2' ||
+                        this.selectedWorkshop === 'Workshop B' ||
+                        this.selectedWorkshop === 'Workshop Y'
+                    ) {
+                        this.employees = ['Tom', 'Sara', 'Peter'];
+                    } else if (
+                        this.selectedWorkshop === 'Workshop 3' ||
+                        this.selectedWorkshop === 'Workshop C' ||
+                        this.selectedWorkshop === 'Workshop Z'
+                    ) {
+                        this.employees = ['Mike', 'Emma', 'David'];
+                    }
+                },
+                saveData() {
+                    var data = {
+                        city: this.selectedCity,
+                        workshop: this.selectedWorkshop,
+                        employee: this.selectedEmployee,
+                        team: this.selectedTeam,
+                        shift: this.selectedShift
+                    };
+                    document.cookie = "formData=" + JSON.stringify(data);
+                    
+                    console.log('Данные сохранены в Cookie.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
